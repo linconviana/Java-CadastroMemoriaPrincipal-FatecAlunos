@@ -1,5 +1,8 @@
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import model.Global;
+import model.Usuarios;
 
 
 public class PrimeiroCadastro extends javax.swing.JFrame {
@@ -62,6 +65,11 @@ public class PrimeiroCadastro extends javax.swing.JFrame {
 
         btnCadastrar.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnCadastrar.setText("Cadastrar");
+        btnCadastrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCadastrarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -128,6 +136,36 @@ public class PrimeiroCadastro extends javax.swing.JFrame {
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.login.setVisible(true);
     }//GEN-LAST:event_formWindowClosed
+
+    private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
+        // TODO add your handling code here:
+        
+        String nome = txtNome.getText().trim();
+        String email = txtEmail.getText().toLowerCase().trim();
+        String senha = txtSenha.getText().trim();
+        String telefone = !txtTelefone.getText().isEmpty() ? txtTelefone.getText().trim() : "";
+        
+        if(!nome.isEmpty() && !email.isEmpty() && !senha.isEmpty()){
+            
+            Usuarios usuario = new Usuarios(1, nome, email, senha, telefone, "");
+            Global.ListaUsuarios.add(usuario);
+            
+            JOptionPane.showMessageDialog(null, "Usuario cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            this.login.setVisible(true);
+            this.dispose();
+            
+        } else {
+            if(nome.isEmpty()){
+                JOptionPane.showMessageDialog(null, "Campo nome é obrigatorio", "Alerta", JOptionPane.WARNING_MESSAGE);
+            }
+            if(email.isEmpty()){
+                JOptionPane.showMessageDialog(null, "Campo email é obrigatorio", "Alerta", JOptionPane.WARNING_MESSAGE);
+            }
+            if(senha.isEmpty()){
+                JOptionPane.showMessageDialog(null, "Campo senha é obrigatorio", "Alerta", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnCadastrarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCadastrar;
