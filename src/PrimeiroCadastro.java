@@ -1,4 +1,5 @@
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import model.Global;
@@ -8,16 +9,20 @@ import model.Usuarios;
 public class PrimeiroCadastro extends javax.swing.JFrame {
 
     private JFrame login;
+    private JButton primeiroCadastro;
+    private JButton trocarSenha;
     
     public PrimeiroCadastro() {
         initComponents();
         this.setLocationRelativeTo(null);
     }
 
-    public PrimeiroCadastro(JFrame login) {
+    public PrimeiroCadastro(JFrame login, JButton primeiroCadastro, JButton trocarSenha) {
         initComponents();
         this.setLocationRelativeTo(null);
         this.login = login;
+        this.primeiroCadastro = primeiroCadastro;
+        this.trocarSenha = trocarSenha;
     }
     
     @SuppressWarnings("unchecked")
@@ -152,6 +157,8 @@ public class PrimeiroCadastro extends javax.swing.JFrame {
             
             JOptionPane.showMessageDialog(null, "Usuario cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             this.login.setVisible(true);
+            this.primeiroCadastro.setVisible(false);
+            this.trocarSenha.setVisible(true);
             this.dispose();
             
         } else {

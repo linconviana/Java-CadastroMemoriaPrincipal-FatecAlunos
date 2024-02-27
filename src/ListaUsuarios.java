@@ -1,10 +1,19 @@
 
+import java.awt.Image;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.table.DefaultTableModel;
+import model.Global;
+import model.Usuarios;
+import utils.JTableRenderer;
 
 
 public class ListaUsuarios extends javax.swing.JFrame {
 
     private JFrame login;
+    private final String localPathImage = System.getProperty("user.dir") + "\\src\\imagem\\";
+    private Usuarios usuario;
     
     public ListaUsuarios() {
         initComponents();
@@ -15,6 +24,47 @@ public class ListaUsuarios extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.login = login;
+        CarregarTabela();
+    }
+    
+    private void CarregarTabela(){
+        
+        DefaultTableModel model = (DefaultTableModel) jTableUsuarios.getModel();
+        model.setNumRows(0);
+        model.setRowCount(0);
+        
+        jTableUsuarios.getColumnModel().getColumn(0).setMinWidth(0);
+        jTableUsuarios.getColumnModel().getColumn(0).setMaxWidth(0);
+        jTableUsuarios.getColumnModel().getColumn(3).setMinWidth(0);
+        jTableUsuarios.getColumnModel().getColumn(3).setMaxWidth(0);
+        jTableUsuarios.getColumnModel().getColumn(5).setMinWidth(0);
+        jTableUsuarios.getColumnModel().getColumn(5).setMaxWidth(0);
+        
+        jTableUsuarios.getColumnModel().getColumn(1).setMinWidth(240);
+        jTableUsuarios.getColumnModel().getColumn(1).setMaxWidth(240);
+        jTableUsuarios.getColumnModel().getColumn(2).setMinWidth(260);
+        jTableUsuarios.getColumnModel().getColumn(2).setMaxWidth(260);
+        jTableUsuarios.getColumnModel().getColumn(4).setMinWidth(120);
+        jTableUsuarios.getColumnModel().getColumn(4).setMaxWidth(120);
+        jTableUsuarios.getColumnModel().getColumn(6).setMinWidth(25);
+        jTableUsuarios.getColumnModel().getColumn(6).setMaxWidth(25);
+        
+        JTableRenderer render = new JTableRenderer();
+        jTableUsuarios.getColumnModel().getColumn(6).setCellRenderer(render);
+        String image = localPathImage + "avatar.png";
+        Icon icon = new ImageIcon(new ImageIcon(image).getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        
+        for(Usuarios user : Global.ListaUsuarios){
+            model.addRow(new Object[]{
+                user.getId(),
+                user.getNome(),
+                user.getEmail(),
+                user.getSenha(),
+                user.getTelefone(),
+                user.getImagem(),
+                icon
+            });
+        }
     }
     
     @SuppressWarnings("unchecked")
@@ -37,7 +87,7 @@ public class ListaUsuarios extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         lblImagem = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableUsuarios = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -82,18 +132,40 @@ public class ListaUsuarios extends javax.swing.JFrame {
         jButton5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton5.setText("Imagem");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableUsuarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Codigo", "Nome", "Email", "Senha", "Telefone", "Imagem", ""
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTableUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableUsuariosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTableUsuarios);
+        if (jTableUsuarios.getColumnModel().getColumnCount() > 0) {
+            jTableUsuarios.getColumnModel().getColumn(0).setResizable(false);
+            jTableUsuarios.getColumnModel().getColumn(1).setResizable(false);
+            jTableUsuarios.getColumnModel().getColumn(2).setResizable(false);
+            jTableUsuarios.getColumnModel().getColumn(3).setResizable(false);
+            jTableUsuarios.getColumnModel().getColumn(4).setResizable(false);
+            jTableUsuarios.getColumnModel().getColumn(5).setResizable(false);
+            jTableUsuarios.getColumnModel().getColumn(6).setResizable(false);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -181,6 +253,34 @@ public class ListaUsuarios extends javax.swing.JFrame {
         this.login.setVisible(true);
     }//GEN-LAST:event_formWindowClosed
 
+    private void jTableUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableUsuariosMouseClicked
+        
+        int id = Integer.parseInt(jTableUsuarios.getValueAt(jTableUsuarios.getSelectedRow(), 0).toString());
+        String nome = jTableUsuarios.getValueAt(jTableUsuarios.getSelectedRow(), 1).toString();
+        String email = jTableUsuarios.getValueAt(jTableUsuarios.getSelectedRow(), 2).toString();
+        String senha = jTableUsuarios.getValueAt(jTableUsuarios.getSelectedRow(), 3).toString();
+        String telefone = jTableUsuarios.getValueAt(jTableUsuarios.getSelectedRow(), 4).toString();
+        String imagem = jTableUsuarios.getValueAt(jTableUsuarios.getSelectedRow(), 5).toString();
+        
+        usuario = new Usuarios();   
+        usuario.setId(id);
+        usuario.setNome(nome);
+        usuario.setEmail(email);
+        usuario.setSenha(senha);
+        usuario.setTelefone(telefone);
+        usuario.setImagem(imagem);
+        
+        txtNome.setText(nome);
+        txtEmail.setText(email);
+        txtTelefone.setText(telefone);
+        
+        if(!usuario.getImagem().isEmpty()){
+            lblImagem.setIcon(new ImageIcon(new ImageIcon(usuario.getImagem()).getImage().getScaledInstance(100, 105, Image.SCALE_DEFAULT)));
+        } else {
+            lblImagem.setIcon(new ImageIcon(new ImageIcon(localPathImage + "avatar.png").getImage().getScaledInstance(100, 105, Image.SCALE_DEFAULT)));
+        }
+    }//GEN-LAST:event_jTableUsuariosMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAtualizar;
     private javax.swing.JButton btnCadastrar;
@@ -193,7 +293,7 @@ public class ListaUsuarios extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTableUsuarios;
     private javax.swing.JLabel lblImagem;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtNome;
